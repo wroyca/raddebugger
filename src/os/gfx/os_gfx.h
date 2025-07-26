@@ -162,6 +162,11 @@ internal void           os_window_push_custom_title_bar_client_area(OS_Handle ha
 internal Rng2F32        os_rect_from_window(OS_Handle window);
 internal Rng2F32        os_client_rect_from_window(OS_Handle window);
 internal F32            os_dpi_from_window(OS_Handle window);
+internal B32            os_window_is_running_under_wine(OS_Handle window);
+
+#if OS_WINDOWS
+internal B32            os_w32_is_wine_environment(void);
+#endif
 
 ////////////////////////////////
 //~ rjf: @os_hooks Monitors (Implemented Per-OS)

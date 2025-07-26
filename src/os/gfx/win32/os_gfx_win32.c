@@ -118,7 +118,7 @@ os_w32_os_key_from_vkey(WPARAM vkey)
   if (first){
     first = 0;
     MemoryZeroArray(key_table);
-    
+
     key_table[(unsigned int)'A'] = OS_Key_A;
     key_table[(unsigned int)'B'] = OS_Key_B;
     key_table[(unsigned int)'C'] = OS_Key_C;
@@ -145,7 +145,7 @@ os_w32_os_key_from_vkey(WPARAM vkey)
     key_table[(unsigned int)'X'] = OS_Key_X;
     key_table[(unsigned int)'Y'] = OS_Key_Y;
     key_table[(unsigned int)'Z'] = OS_Key_Z;
-    
+
     for (U64 i = '0', j = OS_Key_0; i <= '9'; i += 1, j += 1){
       key_table[i] = (OS_Key)j;
     }
@@ -155,7 +155,7 @@ os_w32_os_key_from_vkey(WPARAM vkey)
     for (U64 i = VK_F1, j = OS_Key_F1; i <= VK_F24; i += 1, j += 1){
       key_table[i] = (OS_Key)j;
     }
-    
+
     key_table[VK_SPACE]     = OS_Key_Space;
     key_table[VK_OEM_3]     = OS_Key_Tick;
     key_table[VK_OEM_MINUS] = OS_Key_Minus;
@@ -168,31 +168,31 @@ os_w32_os_key_from_vkey(WPARAM vkey)
     key_table[VK_OEM_PERIOD]= OS_Key_Period;
     key_table[VK_OEM_2]     = OS_Key_Slash;
     key_table[VK_OEM_5]     = OS_Key_BackSlash;
-    
+
     key_table[VK_TAB]       = OS_Key_Tab;
     key_table[VK_PAUSE]     = OS_Key_Pause;
     key_table[VK_ESCAPE]    = OS_Key_Esc;
-    
+
     key_table[VK_UP]        = OS_Key_Up;
     key_table[VK_LEFT]      = OS_Key_Left;
     key_table[VK_DOWN]      = OS_Key_Down;
     key_table[VK_RIGHT]     = OS_Key_Right;
-    
+
     key_table[VK_BACK]      = OS_Key_Backspace;
     key_table[VK_RETURN]    = OS_Key_Return;
-    
+
     key_table[VK_DELETE]    = OS_Key_Delete;
     key_table[VK_INSERT]    = OS_Key_Insert;
     key_table[VK_PRIOR]     = OS_Key_PageUp;
     key_table[VK_NEXT]      = OS_Key_PageDown;
     key_table[VK_HOME]      = OS_Key_Home;
     key_table[VK_END]       = OS_Key_End;
-    
+
     key_table[VK_CAPITAL]   = OS_Key_CapsLock;
     key_table[VK_NUMLOCK]   = OS_Key_NumLock;
     key_table[VK_SCROLL]    = OS_Key_ScrollLock;
     key_table[VK_APPS]      = OS_Key_Menu;
-    
+
     key_table[VK_CONTROL]   = OS_Key_Ctrl;
     key_table[VK_LCONTROL]  = OS_Key_Ctrl;
     key_table[VK_RCONTROL]  = OS_Key_Ctrl;
@@ -202,22 +202,22 @@ os_w32_os_key_from_vkey(WPARAM vkey)
     key_table[VK_MENU]      = OS_Key_Alt;
     key_table[VK_LMENU]     = OS_Key_Alt;
     key_table[VK_RMENU]     = OS_Key_Alt;
-    
+
     key_table[VK_DIVIDE]   = OS_Key_NumSlash;
     key_table[VK_MULTIPLY] = OS_Key_NumStar;
     key_table[VK_SUBTRACT] = OS_Key_NumMinus;
     key_table[VK_ADD]      = OS_Key_NumPlus;
     key_table[VK_DECIMAL]  = OS_Key_NumPeriod;
-    
+
     for (U32 i = 0; i < 10; i += 1){
       key_table[VK_NUMPAD0 + i] = (OS_Key)((U64)OS_Key_Num0 + i);
     }
-    
+
     for (U64 i = 0xDF, j = 0; i < 0xFF; i += 1, j += 1){
       key_table[i] = (OS_Key)((U64)OS_Key_Ex0 + j);
     }
   }
-  
+
   OS_Key key = key_table[vkey&bitmask8];
   return key;
 }
@@ -344,24 +344,24 @@ os_w32_wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     OS_W32_Window *window = os_w32_window_from_hwnd(hwnd);
     OS_Handle window_handle = os_w32_handle_from_window(window);
     B32 release = 0;
-    
+
     switch(uMsg)
     {
       default:
       {
         result = DefWindowProcW(hwnd, uMsg, wParam, lParam);
       }break;
-      
+
       case WM_ENTERSIZEMOVE:
       {
         os_w32_resizing = 1;
       }break;
-      
+
       case WM_EXITSIZEMOVE:
       {
         os_w32_resizing = 0;
       }break;
-      
+
       case WM_SIZE:
       case WM_PAINT:
       {
@@ -370,12 +370,12 @@ os_w32_wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         update();
         EndPaint(hwnd, &ps);
       }break;
-      
+
       case WM_CLOSE:
       {
         os_w32_push_event(OS_EventKind_WindowClose, window);
       }break;
-      
+
       case WM_LBUTTONUP:
       case WM_MBUTTONUP:
       case WM_RBUTTONUP:
@@ -413,14 +413,14 @@ os_w32_wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
           SetCapture(hwnd);
         }
       }break;
-      
+
       case WM_MOUSEMOVE:
       {
         OS_Event *event = os_w32_push_event(OS_EventKind_MouseMove, window);
         event->pos.x = (F32)(S16)LOWORD(lParam);
         event->pos.y = (F32)(S16)HIWORD(lParam);
       }break;
-      
+
       case WM_MOUSEWHEEL:
       {
         S16 wheel_delta = HIWORD(wParam);
@@ -433,7 +433,7 @@ os_w32_wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         event->pos.y = (F32)p.y;
         event->delta = v2f32(0.f, -(F32)wheel_delta);
       }break;
-      
+
       case WM_MOUSEHWHEEL:
       {
         S16 wheel_delta = HIWORD(wParam);
@@ -446,7 +446,7 @@ os_w32_wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         event->pos.y = (F32)p.y;
         event->delta = v2f32((F32)wheel_delta, 0.f);
       }break;
-      
+
       case WM_SYSKEYDOWN: case WM_SYSKEYUP:
       {
         if(wParam != VK_MENU && (wParam < VK_F1 || VK_F24 < wParam || wParam == VK_F4))
@@ -458,7 +458,7 @@ os_w32_wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
       {
         B32 was_down = (lParam & bit31);
         B32 is_down  = !(lParam & bit32);
-        
+
         B32 is_repeat = 0;
         if(!is_down)
         {
@@ -468,7 +468,7 @@ os_w32_wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         {
           is_repeat = 1;
         }
-        
+
         B32 right_sided = 0;
         if ((lParam & bit25) &&
             (wParam == VK_CONTROL || wParam == VK_RCONTROL ||
@@ -477,7 +477,7 @@ os_w32_wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         {
           right_sided = 1;
         }
-        
+
         OS_Event *event = os_w32_push_event(release ? OS_EventKind_Release : OS_EventKind_Press, window);
         event->key = os_w32_os_key_from_vkey(wParam);
         event->repeat_count = lParam & bitmask16;
@@ -487,7 +487,7 @@ os_w32_wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         if(event->key == OS_Key_Ctrl  && event->modifiers & OS_Modifier_Ctrl)  { event->modifiers &= ~OS_Modifier_Ctrl; }
         if(event->key == OS_Key_Shift && event->modifiers & OS_Modifier_Shift) { event->modifiers &= ~OS_Modifier_Shift; }
       }break;
-      
+
       case WM_SYSCHAR:
       {
         WORD vk_code = LOWORD(wParam);
@@ -500,7 +500,7 @@ os_w32_wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
           result = 0;
         }
       }break;
-      
+
       case WM_CHAR:
       {
         U32 character = wParam;
@@ -514,13 +514,13 @@ os_w32_wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
           event->character = character;
         }
       }break;
-      
+
       case WM_KILLFOCUS:
       {
         os_w32_push_event(OS_EventKind_WindowLoseFocus, window);
         ReleaseCapture();
       }break;
-      
+
       case WM_SETCURSOR:
       {
         Rng2F32 window_rect = os_client_rect_from_window(window_handle);
@@ -543,13 +543,13 @@ os_w32_wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
           result = DefWindowProcW(hwnd, uMsg, wParam, lParam);
         }
       }break;
-      
+
       case WM_DPICHANGED:
       {
         F32 new_dpi = (F32)(wParam & 0xffff);
         window->dpi = new_dpi;
       }break;
-      
+
       //- rjf: [file drop]
       case WM_DROPFILES:
       {
@@ -568,7 +568,7 @@ os_w32_wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         }
         DragFinish(drop);
       }break;
-      
+
       //- rjf: [custom border]
       case WM_NCPAINT:
       {
@@ -635,7 +635,7 @@ os_w32_wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
           result = DefWindowProcW(hwnd, uMsg, wParam, lParam);
         }
       }break;
-      
+
       //- rjf: [custom border] activation - without this `result`, stuff flickers.
       case WM_NCACTIVATE:
       {
@@ -648,31 +648,42 @@ os_w32_wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
           result = DefWindowProcW(hwnd, uMsg, wParam, -1);
         }
       }break;
-      
+
       //- rjf: [custom border] client/window size calculation
       case WM_NCCALCSIZE:
       {
         if(os_w32_new_window_custom_border || (window && window->custom_border))
         {
-          F32 dpi = w32_GetDpiForWindow_func ? (F32)w32_GetDpiForWindow_func(hwnd) : 96.f;
-          S32 frame_x = w32_GetSystemMetricsForDpi_func ? w32_GetSystemMetricsForDpi_func(SM_CXFRAME, dpi) : GetSystemMetrics(SM_CXFRAME);
-          S32 frame_y = w32_GetSystemMetricsForDpi_func ? w32_GetSystemMetricsForDpi_func(SM_CYFRAME, dpi) : GetSystemMetrics(SM_CYFRAME);
-          S32 padding = w32_GetSystemMetricsForDpi_func ? w32_GetSystemMetricsForDpi_func(SM_CXPADDEDBORDER, dpi) : GetSystemMetrics(SM_CXPADDEDBORDER);
-          DWORD window_style = GetWindowLong(hwnd, GWL_STYLE);
-          B32 is_fullscreen = !(window_style & WS_OVERLAPPEDWINDOW);
-          if(!is_fullscreen)
+          B32 is_wine = os_w32_gfx_state && os_w32_gfx_state->is_running_under_wine;
+          if(is_wine)
           {
-            RECT* rect = wParam == 0 ? (RECT*)lParam : ((NCCALCSIZE_PARAMS*)lParam)->rgrc;
-            rect->right  -= frame_x + padding;
-            rect->left   += frame_x + padding;
-            rect->bottom -= frame_y + padding;
-            
-            if(IsMaximized(hwnd))
+            // Under Wine, let the default window procedure handle this to
+            // avoid UI hiding
+            result = DefWindowProc(hwnd, uMsg, wParam, lParam);
+          }
+          else
+          {
+            F32 dpi = w32_GetDpiForWindow_func ? (F32)w32_GetDpiForWindow_func(hwnd) : 96.f;
+            S32 frame_x = w32_GetSystemMetricsForDpi_func ? w32_GetSystemMetricsForDpi_func(SM_CXFRAME, dpi) : GetSystemMetrics(SM_CXFRAME);
+            S32 frame_y = w32_GetSystemMetricsForDpi_func ? w32_GetSystemMetricsForDpi_func(SM_CYFRAME, dpi) : GetSystemMetrics(SM_CYFRAME);
+            S32 padding = w32_GetSystemMetricsForDpi_func ? w32_GetSystemMetricsForDpi_func(SM_CXPADDEDBORDER, dpi) : GetSystemMetrics(SM_CXPADDEDBORDER);
+            DWORD window_style = GetWindowLong(hwnd, GWL_STYLE);
+            B32 is_fullscreen = !(window_style & WS_OVERLAPPEDWINDOW);
+
+            if(!is_fullscreen)
             {
-              rect->top += frame_y + padding;
-              // If we do not do this hidden taskbar can not be unhidden on mouse hover
-              // Unfortunately it can create an ugly bottom border when maximized...
-              rect->bottom -= 1; 
+              RECT* rect = wParam == 0 ? (RECT*)lParam : ((NCCALCSIZE_PARAMS*)lParam)->rgrc;
+              rect->right  -= frame_x + padding;
+              rect->left   += frame_x + padding;
+              rect->bottom -= frame_y + padding;
+
+              if(IsMaximized(hwnd))
+              {
+                rect->top += frame_y + padding;
+                // If we do not do this hidden taskbar can not be unhidden on mouse hover
+                // Unfortunately it can create an ugly bottom border when maximized...
+                rect->bottom -= 1;
+              }
             }
           }
         }
@@ -681,20 +692,22 @@ os_w32_wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
           result = DefWindowProc(hwnd, uMsg, wParam, lParam);
         }
       }break;
-      
+
       //- rjf: [custom border] client/window hit testing (mapping mouse -> action)
       case WM_NCHITTEST:
       {
         DWORD window_style = window ? GetWindowLong(window->hwnd, GWL_STYLE) : 0;
         B32 is_fullscreen = !(window_style & WS_OVERLAPPEDWINDOW);
-        if(window == 0 || window->custom_border == 0 || is_fullscreen)
+        B32 is_wine = os_w32_gfx_state && os_w32_gfx_state->is_running_under_wine;
+
+        if(window == 0 || window->custom_border == 0 || is_fullscreen || is_wine)
         {
           result = DefWindowProcW(hwnd, uMsg, wParam, lParam);
         }
         else
         {
           B32 is_default_handled = 0;
-          
+
           // Let the default procedure handle resizing areas
           result = DefWindowProc(hwnd, uMsg, wParam, lParam);
           switch (result)
@@ -711,7 +724,7 @@ os_w32_wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
               is_default_handled = 1;
             } break;
           }
-          
+
           if (!is_default_handled)
           {
             POINT pos_monitor;
@@ -719,17 +732,20 @@ os_w32_wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             pos_monitor.y = GET_Y_LPARAM(lParam);
             POINT pos_client = pos_monitor;
             ScreenToClient(hwnd, &pos_client);
-            
+
             // Adjustments happening in NCCALCSIZE are messing with the detection
             // of the top hit area so manually checking that.
             F32 dpi = w32_GetDpiForWindow_func ? (F32)w32_GetDpiForWindow_func(hwnd) : 96.f;
             S32 frame_y = w32_GetSystemMetricsForDpi_func ? w32_GetSystemMetricsForDpi_func(SM_CYFRAME, dpi) : GetSystemMetrics(SM_CYFRAME);
             // NOTE(rjf): it seems incorrect to apply this padding here...
             // S32 padding = w32_GetSystemMetricsForDpi_func ? w32_GetSystemMetricsForDpi_func(SM_CXPADDEDBORDER, dpi) : GetSystemMetrics(SM_CXPADDEDBORDER);
-            
+
+            if(window->is_running_under_wine)
+              frame_y = Max(1, frame_y / 2);
+
             B32 is_over_top_resize = pos_client.y >= 0 && pos_client.y < frame_y; // + padding;
             B32 is_over_title_bar  = pos_client.y >= 0 && pos_client.y < window->custom_border_title_thickness;
-            
+
             //- rjf: check against title bar client areas
             B32 is_over_title_bar_client_area = 0;
             for(OS_W32_TitleBarClientArea *area = window->first_title_bar_client_area;
@@ -744,7 +760,7 @@ os_w32_wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                 break;
               }
             }
-            
+
             if (IsMaximized(hwnd))
             {
               if (is_over_title_bar_client_area)
@@ -755,7 +771,7 @@ os_w32_wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
               {
                 result = HTCAPTION;
               }
-              else 
+              else
               {
                 result = HTCLIENT;
               }
@@ -802,6 +818,33 @@ os_w32_monitor_gather_enum_proc(HMONITOR monitor, HDC hdc, LPRECT rect, LPARAM b
 }
 
 ////////////////////////////////
+//~ wroyca: Wine Detection
+
+internal B32
+os_w32_is_running_under_wine(void)
+{
+  HKEY hkey;
+  LONG result = RegOpenKeyExA(HKEY_CURRENT_USER, "Software\\Wine", 0, KEY_READ, &hkey);
+  if(result == ERROR_SUCCESS)
+  {
+    RegCloseKey(hkey);
+    return 1;
+  }
+
+  HMODULE ntdll = GetModuleHandleA("ntdll.dll");
+  if(ntdll != 0)
+  {
+    void *wine_get_version = (void*)GetProcAddress(ntdll, "wine_get_version");
+    if(wine_get_version != 0)
+    {
+      return 1;
+    }
+  }
+
+  return 0;
+}
+
+////////////////////////////////
 //~ rjf: @os_hooks Main Initialization API (Implemented Per-OS)
 
 internal void
@@ -813,7 +856,8 @@ os_gfx_init(void)
   os_w32_gfx_state->arena = arena;
   os_w32_gfx_state->gfx_thread_tid = (U32)GetCurrentThreadId();
   os_w32_gfx_state->hInstance = GetModuleHandle(0);
-  
+  os_w32_gfx_state->is_running_under_wine = os_w32_is_running_under_wine();
+
   //- rjf: set dpi awareness
   w32_SetProcessDpiAwarenessContext_Type *SetProcessDpiAwarenessContext_func = 0;
   HMODULE module = LoadLibraryA("user32.dll");
@@ -846,7 +890,7 @@ os_gfx_init(void)
     }
     SetProcessDPIAware();
   }
-  
+
   //- rjf: register graphical-window class
   {
     WNDCLASSEXW wndclass = {sizeof(wndclass)};
@@ -859,7 +903,7 @@ os_gfx_init(void)
     ATOM wndatom = RegisterClassExW(&wndclass);
     (void)wndatom;
   }
-  
+
   //- rjf: grab graphics system info
   {
     os_w32_gfx_state->gfx_info.double_click_time = GetDoubleClickTime()/1000.f;
@@ -870,10 +914,10 @@ os_gfx_init(void)
       os_w32_gfx_state->gfx_info.default_refresh_rate = (F32)devmodew.dmDisplayFrequency;
     }
   }
-  
+
   //- rjf: set initial cursor
   os_set_cursor(OS_Cursor_Pointer);
-  
+
   //- rjf: fill vkey -> OS_Key table
   {
     os_w32_gfx_state->key_from_vkey_table[(unsigned int)'A'] = OS_Key_A;
@@ -902,7 +946,7 @@ os_gfx_init(void)
     os_w32_gfx_state->key_from_vkey_table[(unsigned int)'X'] = OS_Key_X;
     os_w32_gfx_state->key_from_vkey_table[(unsigned int)'Y'] = OS_Key_Y;
     os_w32_gfx_state->key_from_vkey_table[(unsigned int)'Z'] = OS_Key_Z;
-    
+
     for(U64 i = '0', j = OS_Key_0; i <= '9'; i += 1, j += 1)
     {
       os_w32_gfx_state->key_from_vkey_table[i] = (OS_Key)j;
@@ -915,7 +959,7 @@ os_gfx_init(void)
     {
       os_w32_gfx_state->key_from_vkey_table[i] = (OS_Key)j;
     }
-    
+
     os_w32_gfx_state->key_from_vkey_table[VK_SPACE]     = OS_Key_Space;
     os_w32_gfx_state->key_from_vkey_table[VK_OEM_3]     = OS_Key_Tick;
     os_w32_gfx_state->key_from_vkey_table[VK_OEM_MINUS] = OS_Key_Minus;
@@ -928,31 +972,31 @@ os_gfx_init(void)
     os_w32_gfx_state->key_from_vkey_table[VK_OEM_PERIOD]= OS_Key_Period;
     os_w32_gfx_state->key_from_vkey_table[VK_OEM_2]     = OS_Key_Slash;
     os_w32_gfx_state->key_from_vkey_table[VK_OEM_5]     = OS_Key_BackSlash;
-    
+
     os_w32_gfx_state->key_from_vkey_table[VK_TAB]       = OS_Key_Tab;
     os_w32_gfx_state->key_from_vkey_table[VK_PAUSE]     = OS_Key_Pause;
     os_w32_gfx_state->key_from_vkey_table[VK_ESCAPE]    = OS_Key_Esc;
-    
+
     os_w32_gfx_state->key_from_vkey_table[VK_UP]        = OS_Key_Up;
     os_w32_gfx_state->key_from_vkey_table[VK_LEFT]      = OS_Key_Left;
     os_w32_gfx_state->key_from_vkey_table[VK_DOWN]      = OS_Key_Down;
     os_w32_gfx_state->key_from_vkey_table[VK_RIGHT]     = OS_Key_Right;
-    
+
     os_w32_gfx_state->key_from_vkey_table[VK_BACK]      = OS_Key_Backspace;
     os_w32_gfx_state->key_from_vkey_table[VK_RETURN]    = OS_Key_Return;
-    
+
     os_w32_gfx_state->key_from_vkey_table[VK_DELETE]    = OS_Key_Delete;
     os_w32_gfx_state->key_from_vkey_table[VK_INSERT]    = OS_Key_Insert;
     os_w32_gfx_state->key_from_vkey_table[VK_PRIOR]     = OS_Key_PageUp;
     os_w32_gfx_state->key_from_vkey_table[VK_NEXT]      = OS_Key_PageDown;
     os_w32_gfx_state->key_from_vkey_table[VK_HOME]      = OS_Key_Home;
     os_w32_gfx_state->key_from_vkey_table[VK_END]       = OS_Key_End;
-    
+
     os_w32_gfx_state->key_from_vkey_table[VK_CAPITAL]   = OS_Key_CapsLock;
     os_w32_gfx_state->key_from_vkey_table[VK_NUMLOCK]   = OS_Key_NumLock;
     os_w32_gfx_state->key_from_vkey_table[VK_SCROLL]    = OS_Key_ScrollLock;
     os_w32_gfx_state->key_from_vkey_table[VK_APPS]      = OS_Key_Menu;
-    
+
     os_w32_gfx_state->key_from_vkey_table[VK_CONTROL]   = OS_Key_Ctrl;
     os_w32_gfx_state->key_from_vkey_table[VK_LCONTROL]  = OS_Key_Ctrl;
     os_w32_gfx_state->key_from_vkey_table[VK_RCONTROL]  = OS_Key_Ctrl;
@@ -962,18 +1006,18 @@ os_gfx_init(void)
     os_w32_gfx_state->key_from_vkey_table[VK_MENU]      = OS_Key_Alt;
     os_w32_gfx_state->key_from_vkey_table[VK_LMENU]     = OS_Key_Alt;
     os_w32_gfx_state->key_from_vkey_table[VK_RMENU]     = OS_Key_Alt;
-    
+
     os_w32_gfx_state->key_from_vkey_table[VK_DIVIDE]   = OS_Key_NumSlash;
     os_w32_gfx_state->key_from_vkey_table[VK_MULTIPLY] = OS_Key_NumStar;
     os_w32_gfx_state->key_from_vkey_table[VK_SUBTRACT] = OS_Key_NumMinus;
     os_w32_gfx_state->key_from_vkey_table[VK_ADD]      = OS_Key_NumPlus;
     os_w32_gfx_state->key_from_vkey_table[VK_DECIMAL]  = OS_Key_NumPeriod;
-    
+
     for(U32 i = 0; i < 10; i += 1)
     {
       os_w32_gfx_state->key_from_vkey_table[VK_NUMPAD0 + i] = (OS_Key)((U64)OS_Key_Num0 + i);
     }
-    
+
     for(U64 i = 0xDF, j = 0; i < 0xFF; i += 1, j += 1)
     {
       os_w32_gfx_state->key_from_vkey_table[i] = (OS_Key)((U64)OS_Key_Ex0 + j);
@@ -1049,7 +1093,7 @@ os_window_open(Rng2F32 rect, OS_WindowFlags flags, String8 title)
   B32 use_default_position = !!(flags & OS_WindowFlag_UseDefaultPosition);
   Vec2F32 pos = rect.p0;
   Vec2F32 dim = dim_2f32(rect);
-  
+
   //- rjf: make hwnd
   HWND hwnd = 0;
   {
@@ -1071,7 +1115,7 @@ os_window_open(Rng2F32 rect, OS_WindowFlags flags, String8 title)
     os_w32_new_window_custom_border = 0;
     scratch_end(scratch);
   }
-  
+
   //- rjf- make/fill window
   OS_W32_Window *window = os_w32_window_alloc();
   {
@@ -1086,21 +1130,22 @@ os_window_open(Rng2F32 rect, OS_WindowFlags flags, String8 title)
       window->dpi = 96.f;
     }
   }
-  
-  //- rjf: early detection of composition
+
+  //- rjf: early detection of composition and Wine
   {
     BOOL enabled = 0;
     DwmIsCompositionEnabled(&enabled);
     window->custom_border_composition_enabled = enabled;
+    window->is_running_under_wine = os_w32_gfx_state->is_running_under_wine;
   }
-  
+
   //- rjf: custom border
   if(flags & OS_WindowFlag_CustomBorder)
   {
     window->custom_border = 1;
     window->paint_arena = arena_alloc();
   }
-  
+
   //- rjf: convert to handle + return
   OS_Handle result = os_w32_handle_from_window(window);
   return result;
@@ -1365,6 +1410,24 @@ os_dpi_from_window(OS_Handle handle)
     result = window->dpi;
   }
   return result;
+}
+
+internal B32
+os_window_is_running_under_wine(OS_Handle handle)
+{
+  B32 result = 0;
+  OS_W32_Window *window = os_w32_window_from_handle(handle);
+  if(window != 0)
+  {
+    result = window->is_running_under_wine;
+  }
+  return result;
+}
+
+internal B32
+os_w32_is_wine_environment(void)
+{
+  return os_w32_gfx_state ? os_w32_gfx_state->is_running_under_wine : 0;
 }
 
 ////////////////////////////////

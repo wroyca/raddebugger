@@ -48,6 +48,7 @@ struct OS_W32_Window
   F32 custom_border_title_thickness;
   F32 custom_border_edge_thickness;
   B32 custom_border_composition_enabled;
+  B32 is_running_under_wine;
   Arena *paint_arena;
   OS_W32_TitleBarClientArea *first_title_bar_client_area;
   OS_W32_TitleBarClientArea *last_title_bar_client_area;
@@ -78,6 +79,7 @@ struct OS_W32_GfxState
   OS_W32_Window *last_window;
   OS_W32_Window *free_window;
   OS_Key key_from_vkey_table[256];
+  B32 is_running_under_wine;
 };
 
 ////////////////////////////////

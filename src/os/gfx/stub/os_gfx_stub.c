@@ -129,6 +129,12 @@ os_window_push_custom_title_bar_client_area(OS_Handle handle, Rng2F32 rect)
 {
 }
 
+internal B32
+os_window_is_running_under_wine(OS_Handle handle)
+{
+  return 0;
+}
+
 internal Rng2F32
 os_rect_from_window(OS_Handle window)
 {
